@@ -1,5 +1,6 @@
 package com.proyectobadt2_pedrojimenez.BBDD.Clases;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -7,8 +8,9 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "TERREMOTOS", indices = @Index(value = {"fecha_hora"}, unique = true))
 public class Terremoto {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey()
     @ColumnInfo(name = "fecha_hora")
+    @NonNull
     private String fec_hor;
     @ColumnInfo(name = "magnitud")
     private Double mag;
@@ -28,5 +30,30 @@ public class Terremoto {
         this.coor_epic = coor_epic;
         this.lug = lug;
         this.cant_mue = cant_mue;
+    }
+
+    @NonNull
+    public String getFec_hor() {
+        return fec_hor;
+    }
+
+    public Double getMag() {
+        return mag;
+    }
+
+    public String getNom_disp() {
+        return nom_disp;
+    }
+
+    public String getCoor_epic() {
+        return coor_epic;
+    }
+
+    public String getLug() {
+        return lug;
+    }
+
+    public String getCant_mue() {
+        return cant_mue;
     }
 }

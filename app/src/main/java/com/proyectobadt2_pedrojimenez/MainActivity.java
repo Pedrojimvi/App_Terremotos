@@ -1,8 +1,17 @@
 package com.proyectobadt2_pedrojimenez;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.proyectobadt2_pedrojimenez.BBDD.Clases.PaisAfectado;
 import com.proyectobadt2_pedrojimenez.BBDD.Clases.Terremoto;
@@ -104,6 +113,11 @@ public class MainActivity extends AppCompatActivity {
         paises.add(new PaisAfectado("23 de junio de 2001, 15:33", "Perú"));
     }
 
+    Button btnFil;
+    Button btnCon;
+    TextView txtFil;
+    RecyclerView rcVRes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +126,73 @@ public class MainActivity extends AppCompatActivity {
         setTerremotos(terremotos);
         setPaises(paises);
         crearBBDD();
+
+        btnFil = findViewById(R.id.btnFil);
+        btnCon = findViewById(R.id.btnCon);
+        txtFil = findViewById(R.id.txtFil);
+        rcVRes = findViewById(R.id.rcVRes);
+
+        btnFil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                TextView txtMes = new TextView(MainActivity.this);
+                Spinner spnMes = new Spinner(MainActivity.this);
+                TextView txtAnio = new TextView(MainActivity.this);
+                EditText etAnio = new EditText(MainActivity.this);
+                TextView txtPais = new TextView(MainActivity.this);
+                Spinner spnPais = new Spinner(MainActivity.this);
+                Button btnCancelar = new Button(MainActivity.this);
+                Button btnAceptar = new Button(MainActivity.this);
+
+                //Configuración de los elementos del diálogo
+                txtMes.setText("Mes");
+
+                int meses = 12;
+                spnMes.setAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, meses));
+
+                txtAnio.setText("Año");
+
+                etAnio.setHint("Año");
+
+                txtPais.setText("País");
+
+                int paises = 24;
+                spnPais.setAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, paises));
+
+                btnCancelar.setText("Cancelar");
+
+                btnAceptar.setText("Aceptar");
+
+                //Configuración del diálogo
+                builder.setView(txtMes);
+                builder.setView(spnMes);
+                builder.setView(txtAnio);
+                builder.setView(etAnio);
+                builder.setView(txtPais);
+                builder.setView(spnPais);
+                builder.setView(btnCancelar);
+                builder.setView(btnAceptar);
+                builder.setTitle("Filtrar");
+                builder.setCancelable(false);
+                builder.create();
+                builder.show();
+
+                btnCancelar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        return;
+                    }
+                });
+
+                btnAceptar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        return;
+                    }
+                });
+            }
+        });
     }
 
     private void crearBBDD() {

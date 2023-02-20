@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">ProyectoBADT2_PedroJiménez</string>
+    <string name="consultar">Consultar</string>
+    <string name="filtrar">Filtrar</string>
+    <string name="mes_anio_pais">Mes:, Año: , País:</string>
 </resources>
