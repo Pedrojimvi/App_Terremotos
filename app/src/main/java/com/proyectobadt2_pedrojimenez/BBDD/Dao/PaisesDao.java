@@ -6,6 +6,7 @@ import androidx.room.Query;
 
 import com.proyectobadt2_pedrojimenez.BBDD.Clases.PaisAfectado;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -20,5 +21,5 @@ public interface PaisesDao {
     PaisAfectado selectPaisByPais(String pais);
 
     @Insert
-    void insertPais(PaisAfectado pais);
+    void insertPais(ArrayList<PaisAfectado> pais);
 }
