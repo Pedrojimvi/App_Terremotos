@@ -1,22 +1,26 @@
 package com.proyectobadt2_pedrojimenez;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.View;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.proyectobadt2_pedrojimenez.BBDD.Clases.PaisAfectado;
 import com.proyectobadt2_pedrojimenez.BBDD.Clases.Terremoto;
 import com.proyectobadt2_pedrojimenez.BBDD.Dao.PaisesDao;
 import com.proyectobadt2_pedrojimenez.BBDD.Dao.TerremotosDao;
+import com.proyectobadt2_pedrojimenez.BBDD.TerremotosAdapter;
 import com.proyectobadt2_pedrojimenez.BBDD.TerremotosDB;
 
 import java.util.ArrayList;
@@ -24,6 +28,10 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     static ArrayList<Terremoto> terremotos = new ArrayList<>();
     static ArrayList<PaisAfectado> paises = new ArrayList<>();
+    TerremotosDB db;
+    String mes;
+    String anio;
+    String pais;
 
     public static void setTerremotos(ArrayList<Terremoto> terremotos) {
         terremotos.add(new Terremoto("22 de mayo de 1960, 15:11", 9.5, "Terremoto de Valdivia de 1960",
@@ -132,71 +140,148 @@ public class MainActivity extends AppCompatActivity {
         txtFil = findViewById(R.id.txtFil);
         rcVRes = findViewById(R.id.rcVRes);
 
-        btnFil.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                TextView txtMes = new TextView(MainActivity.this);
-                Spinner spnMes = new Spinner(MainActivity.this);
-                TextView txtAnio = new TextView(MainActivity.this);
-                EditText etAnio = new EditText(MainActivity.this);
-                TextView txtPais = new TextView(MainActivity.this);
-                Spinner spnPais = new Spinner(MainActivity.this);
-                Button btnCancelar = new Button(MainActivity.this);
-                Button btnAceptar = new Button(MainActivity.this);
+        btnFil.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            LinearLayout layout = new LinearLayout(MainActivity.this);
+            TextView txtMes = new TextView(MainActivity.this);
+            Spinner spnMes = new Spinner(MainActivity.this);
+            TextView txtAnio = new TextView(MainActivity.this);
+            EditText etAnio = new EditText(MainActivity.this);
+            TextView txtPais = new TextView(MainActivity.this);
+            Spinner spnPais = new Spinner(MainActivity.this);
 
-                //Configuración de los elementos del diálogo
-                txtMes.setText("Mes");
+            //Creación de los elementos del diálogo
+            layout.setOrientation(LinearLayout.VERTICAL);
 
-                int meses = 12;
-                spnMes.setAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, meses));
+            //Cambiamos los TextView para que salgan a 16sp, en Negrita y recolocados
+            txtMes.setText(R.string.mes);
+            txtMes.setTextSize(16);
+            txtMes.setTypeface(null, Typeface.BOLD);
+            txtMes.setPadding(20, 20, 0, 0);
 
-                txtAnio.setText("Año");
+            //Modificación del Spinner para que muestre los meses del año
+            String[] meses = new String[]{"Sin filtro", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+            spnMes.setAdapter(new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, meses));
 
-                etAnio.setHint("Año");
+            txtAnio.setText(R.string.anio);
+            txtAnio.setTextSize(16);
+            txtAnio.setTypeface(null, Typeface.BOLD);
+            txtAnio.setPadding(20, 20, 0, 0);
 
-                txtPais.setText("País");
+            //Modificación del EditText para que solo permita introducir 4 dígitos
+            etAnio.setHint(R.string.anio);
+            etAnio.setInputType(InputType.TYPE_CLASS_NUMBER);
+            etAnio.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
 
-                int paises = 24;
-                spnPais.setAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, paises));
+            txtPais.setText(R.string.pais);
+            txtPais.setTextSize(16);
+            txtPais.setTypeface(null, Typeface.BOLD);
+            txtPais.setPadding(20, 20, 0, 0);
 
-                btnCancelar.setText("Cancelar");
+            //Modificación del Spinner para que muestre los países afectados de la base de datos (SIN REPETIRSE)
+            String[] paisesTotales = db.paisesDao().getPaises();
 
-                btnAceptar.setText("Aceptar");
+            //Primer elemento del Spinner vacío
+            String[] paisesFinal = new String[paisesTotales.length + 1];
+            paisesFinal[0] = "Sin filtro";
 
-                //Configuración del diálogo
-                builder.setView(txtMes);
-                builder.setView(spnMes);
-                builder.setView(txtAnio);
-                builder.setView(etAnio);
-                builder.setView(txtPais);
-                builder.setView(spnPais);
-                builder.setView(btnCancelar);
-                builder.setView(btnAceptar);
-                builder.setTitle("Filtrar");
-                builder.setCancelable(false);
-                builder.create();
-                builder.show();
+            //Método para copiar el array de países a otro array en vez de usar un for
+            System.arraycopy(paisesTotales, 0, paisesFinal, 1, paisesTotales.length);
 
-                btnCancelar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        return;
+            spnPais.setAdapter(new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, paisesFinal));
+
+            //Añadimos los elementos al LinearLayout
+            layout.addView(txtMes);
+            layout.addView(spnMes);
+            layout.addView(txtAnio);
+            layout.addView(etAnio);
+            layout.addView(txtPais);
+            layout.addView(spnPais);
+
+            //Configuración del diálogo con el título, la vista y los botones
+            builder.setTitle(R.string.filtrar);
+            builder.setView(layout);
+
+            builder.setPositiveButton(R.string.aceptar, (dialog, which) -> {
+                if (etAnio.getText().toString().isEmpty()) {
+                    etAnio.setText("-1");
+                }
+
+                if (Integer.parseInt(etAnio.getText().toString()) > 2023 ) Toast.makeText(MainActivity.this, "El año introducido no es válido", Toast.LENGTH_SHORT).show();
+                else {
+                    mes = spnMes.getSelectedItem().toString();
+                    anio = etAnio.getText().toString();
+                    if (anio.equals("-1")) {
+                        anio = "Sin filtro";
                     }
-                });
+                    pais = spnPais.getSelectedItem().toString();
 
-                btnAceptar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        return;
+                    txtFil.setText("Mes: " + mes + "\nAño: " + anio + "\nPaís: " + pais);
+                }
+            });
+
+            builder.setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.cancel());
+
+            builder.create();
+            builder.show();
+        });
+
+        btnCon.setOnClickListener(v -> {
+            //Comprobar si el mes es "Sin filtro"
+            if (mes.equals("Sin filtro")) {
+                //Comprobar si el año es "Sin filtro"
+                if (anio.equals("Sin filtro")) {
+                    //Comprobar si el país es "Sin filtro"
+                    if (pais.equals("Sin filtro")) {
+                        //Mostrar todos los terremotos
+                        rcVRes.setAdapter(new TerremotosAdapter((Terremoto) db.terremotosDao().getAllTerremotos()));
                     }
-                });
+                    else {
+                        //Mostrar los terremotos de un país
+                        rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosPais(pais)));
+                    }
+
+                }
+                else {
+                    //Comprobar si el país es "Sin filtro"
+                    if (pais.equals("Sin filtro")) {
+                        //Mostrar los terremotos de un año
+                        rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosAnio(anio)));
+                    } else {
+                        //Mostrar los terremotos de un año y un país
+                        rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosAnioPais(anio, pais)));
+                    }
+                }
+            } else {
+                //Comprobar si el año es "Sin filtro"
+                if (anio.equals("Sin filtro")) {
+                    //Comprobar si el país es "Sin filtro"
+                    if (pais.equals("Sin filtro")) {
+                        //Mostrar los terremotos de un mes
+                        rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosMes(mes)));
+                    }
+                    else {
+                        //Mostrar los terremotos de un mes y un país
+                        rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosMesPais(mes, pais)));
+                    }
+                }
+                else {
+                    //Comprobar si el país es "Sin filtro"
+                    if (pais.equals("Sin filtro")) {
+                        //Mostrar los terremotos de un mes y un año
+                        rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosMesAnio(mes, anio)));
+                    }
+                    else {
+                        //Mostrar los terremotos de un mes, un año y un país
+                        rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosMesAnioPais(mes, anio, pais)));
+                    }
+                }
             }
         });
     }
 
     private void crearBBDD() {
-        TerremotosDB db = TerremotosDB.getDatabase(this);
+        db = TerremotosDB.getDatabase(this);
         TerremotosDao terremotosDao = db.terremotosDao();
         PaisesDao paisesDao = db.paisesDao();
 

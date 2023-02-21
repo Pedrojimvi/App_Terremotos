@@ -1,6 +1,11 @@
 <resources>
-    <string name="app_name">ProyectoBADT2_PedroJiménez</string>
+    <string name="app_name">Consulta Terremotos</string>
     <string name="consultar">Consultar</string>
     <string name="filtrar">Filtrar</string>
-    <string name="mes_anio_pais">Mes:, Año: , País:</string>
+    <string name="mes_anio_pais">Mes:\nAño:\nPaís: </string>
+    <string name="mes">Mes</string>
+    <string name="anio">Año</string>
+    <string name="pais">País</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="cancelar">Cancelar</string>
 </resources>
