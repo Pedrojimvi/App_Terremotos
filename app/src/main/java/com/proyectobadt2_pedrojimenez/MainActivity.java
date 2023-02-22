@@ -25,10 +25,9 @@ import com.proyectobadt2_pedrojimenez.BBDD.TerremotosDB;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnDatosListener {
     static ArrayList<Terremoto> terremotos = new ArrayList<>();
     static ArrayList<PaisAfectado> paises = new ArrayList<>();
-    TerremotosDB db;
     String mes;
     String anio;
     String pais;
@@ -141,92 +140,14 @@ public class MainActivity extends AppCompatActivity {
         rcVRes = findViewById(R.id.rcVRes);
 
         btnFil.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            LinearLayout layout = new LinearLayout(MainActivity.this);
-            TextView txtMes = new TextView(MainActivity.this);
-            Spinner spnMes = new Spinner(MainActivity.this);
-            TextView txtAnio = new TextView(MainActivity.this);
-            EditText etAnio = new EditText(MainActivity.this);
-            TextView txtPais = new TextView(MainActivity.this);
-            Spinner spnPais = new Spinner(MainActivity.this);
+            FiltroDialogFragment filtroDialogFragment = new FiltroDialogFragment();
+            filtroDialogFragment.show(getSupportFragmentManager(), "FiltroDialogFragment");
 
-            //Creación de los elementos del diálogo
-            layout.setOrientation(LinearLayout.VERTICAL);
-
-            //Cambiamos los TextView para que salgan a 16sp, en Negrita y recolocados
-            txtMes.setText(R.string.mes);
-            txtMes.setTextSize(16);
-            txtMes.setTypeface(null, Typeface.BOLD);
-            txtMes.setPadding(20, 20, 0, 0);
-
-            //Modificación del Spinner para que muestre los meses del año
-            String[] meses = new String[]{"Sin filtro", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
-            spnMes.setAdapter(new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, meses));
-
-            txtAnio.setText(R.string.anio);
-            txtAnio.setTextSize(16);
-            txtAnio.setTypeface(null, Typeface.BOLD);
-            txtAnio.setPadding(20, 20, 0, 0);
-
-            //Modificación del EditText para que solo permita introducir 4 dígitos
-            etAnio.setHint(R.string.anio);
-            etAnio.setInputType(InputType.TYPE_CLASS_NUMBER);
-            etAnio.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
-
-            txtPais.setText(R.string.pais);
-            txtPais.setTextSize(16);
-            txtPais.setTypeface(null, Typeface.BOLD);
-            txtPais.setPadding(20, 20, 0, 0);
-
-            //Modificación del Spinner para que muestre los países afectados de la base de datos (SIN REPETIRSE)
-            String[] paisesTotales = db.paisesDao().getPaises();
-
-            //Primer elemento del Spinner vacío
-            String[] paisesFinal = new String[paisesTotales.length + 1];
-            paisesFinal[0] = "Sin filtro";
-
-            //Método para copiar el array de países a otro array en vez de usar un for
-            System.arraycopy(paisesTotales, 0, paisesFinal, 1, paisesTotales.length);
-
-            spnPais.setAdapter(new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, paisesFinal));
-
-            //Añadimos los elementos al LinearLayout
-            layout.addView(txtMes);
-            layout.addView(spnMes);
-            layout.addView(txtAnio);
-            layout.addView(etAnio);
-            layout.addView(txtPais);
-            layout.addView(spnPais);
-
-            //Configuración del diálogo con el título, la vista y los botones
-            builder.setTitle(R.string.filtrar);
-            builder.setView(layout);
-
-            builder.setPositiveButton(R.string.aceptar, (dialog, which) -> {
-                if (etAnio.getText().toString().isEmpty()) {
-                    etAnio.setText("-1");
-                }
-
-                if (Integer.parseInt(etAnio.getText().toString()) > 2023 ) Toast.makeText(MainActivity.this, "El año introducido no es válido", Toast.LENGTH_SHORT).show();
-                else {
-                    mes = spnMes.getSelectedItem().toString();
-                    anio = etAnio.getText().toString();
-                    if (anio.equals("-1")) {
-                        anio = "Sin filtro";
-                    }
-                    pais = spnPais.getSelectedItem().toString();
-
-                    txtFil.setText("Mes: " + mes + "\nAño: " + anio + "\nPaís: " + pais);
-                }
-            });
-
-            builder.setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.cancel());
-
-            builder.create();
-            builder.show();
+            onAceptarDatosListener(mes, anio, pais);
         });
 
         btnCon.setOnClickListener(v -> {
+            TerremotosDB db = TerremotosDB.getDatabase(this);
             //Comprobar si el mes es "Sin filtro"
             if (mes.equals("Sin filtro")) {
                 //Comprobar si el año es "Sin filtro"
@@ -281,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void crearBBDD() {
-        db = TerremotosDB.getDatabase(this);
+        TerremotosDB db = TerremotosDB.getDatabase(this);
         TerremotosDao terremotosDao = db.terremotosDao();
         PaisesDao paisesDao = db.paisesDao();
 
@@ -296,5 +217,12 @@ public class MainActivity extends AppCompatActivity {
             //Insertar paises
             paisesDao.insertPais(paises);
         }
+    }
+
+    public void onAceptarDatosListener(String mes, String anio, String pais) {
+        this.mes = mes;
+        this.anio = anio;
+        this.pais = pais;
+        txtFil.setText("Mes: " + mes + "\nAño: " + anio + "\nPaís: " + pais);
     }
 }
