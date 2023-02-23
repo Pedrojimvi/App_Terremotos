@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="@string/mes"
+        android:textColor="@color/brown_500"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -28,6 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="@string/anio"
+        android:textColor="@color/brown_500"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -37,6 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:hint="@string/anio"
+        android:textColor="@color/brown_500"
+        android:textColorHint="@color/brown_500"
         android:inputType="number"
         android:maxLength="4"
         android:minHeight="48dp"
@@ -48,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="@string/pais"
+        android:textColor="@color/brown_500"
         android:textSize="20sp"
         android:textStyle="bold" />
 

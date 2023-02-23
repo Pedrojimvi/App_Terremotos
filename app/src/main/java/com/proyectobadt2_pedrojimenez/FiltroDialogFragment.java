@@ -3,6 +3,10 @@ package com.proyectobadt2_pedrojimenez;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -26,7 +30,10 @@ public class FiltroDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View v = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_filtro, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Filtrar por:");
+        SpannableString titulo = new SpannableString("Filtrar por:");
+        titulo.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, titulo.length(), 0);
+        titulo.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.brown_500)), 0, titulo.length(), 0);
+        builder.setTitle(titulo);
         builder.setView(v);
 
         spnMes = v.findViewById(R.id.spnMes);
@@ -46,17 +53,15 @@ public class FiltroDialogFragment extends DialogFragment {
         spnPais.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, paisesFinal));
 
         builder.setPositiveButton(R.string.aceptar, (dialog, id) -> {
-            String mes = null;
-            String anio = null;
-            String pais = null;
+            String mes;
+            String anio;
+            String pais;
 
             if (edtAnio.getText().toString().isEmpty()) {
                 edtAnio.setText("-1");
             }
 
-            if (Integer.parseInt(edtAnio.getText().toString()) > 2023 ) {
-                Toast.makeText(getContext(), "El año introducido no es válido", Toast.LENGTH_SHORT).show();
-            }
+            if (Integer.parseInt(edtAnio.getText().toString()) > 2023 || (edtAnio.length() >= 1 && edtAnio.length() < 4 && !edtAnio.getText().toString().equals("-1"))) Toast.makeText(getContext(), "El año introducido no es válido", Toast.LENGTH_SHORT).show();
             else {
                 mes = spnMes.getSelectedItem().toString();
                 anio = edtAnio.getText().toString();
@@ -64,9 +69,9 @@ public class FiltroDialogFragment extends DialogFragment {
                     anio = "Sin filtro";
                 }
                 pais = spnPais.getSelectedItem().toString();
+
+                listener.onAceptarDatosListener(mes, anio, pais);
             }
-            
-            listener.onAceptarDatosListener(mes, anio, pais);
         });
 
         builder.setNegativeButton(R.string.cancelar, (dialog, id) -> dialog.cancel());

@@ -1,26 +1,19 @@
 package com.proyectobadt2_pedrojimenez;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.proyectobadt2_pedrojimenez.BBDD.Clases.PaisAfectado;
 import com.proyectobadt2_pedrojimenez.BBDD.Clases.Terremoto;
 import com.proyectobadt2_pedrojimenez.BBDD.Dao.PaisesDao;
 import com.proyectobadt2_pedrojimenez.BBDD.Dao.TerremotosDao;
-import com.proyectobadt2_pedrojimenez.BBDD.TerremotosAdapter;
 import com.proyectobadt2_pedrojimenez.BBDD.TerremotosDB;
 
 import java.util.ArrayList;
@@ -28,9 +21,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements OnDatosListener {
     static ArrayList<Terremoto> terremotos = new ArrayList<>();
     static ArrayList<PaisAfectado> paises = new ArrayList<>();
-    String mes;
-    String anio;
-    String pais;
+    String mes = "";
+    String anio = "";
+    String pais = "";
 
     public static void setTerremotos(ArrayList<Terremoto> terremotos) {
         terremotos.add(new Terremoto("22 de mayo de 1960, 15:11", 9.5, "Terremoto de Valdivia de 1960",
@@ -147,54 +140,87 @@ public class MainActivity extends AppCompatActivity implements OnDatosListener {
         });
 
         btnCon.setOnClickListener(v -> {
-            TerremotosDB db = TerremotosDB.getDatabase(this);
-            //Comprobar si el mes es "Sin filtro"
-            if (mes.equals("Sin filtro")) {
-                //Comprobar si el año es "Sin filtro"
-                if (anio.equals("Sin filtro")) {
-                    //Comprobar si el país es "Sin filtro"
-                    if (pais.equals("Sin filtro")) {
-                        //Mostrar todos los terremotos
-                        rcVRes.setAdapter(new TerremotosAdapter((Terremoto) db.terremotosDao().getAllTerremotos()));
-                    }
-                    else {
-                        //Mostrar los terremotos de un país
-                        rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosPais(pais)));
-                    }
+            rcVRes.setLayoutManager(new LinearLayoutManager(this));
+            rcVRes.setItemAnimator(new DefaultItemAnimator());
 
-                }
-                else {
-                    //Comprobar si el país es "Sin filtro"
-                    if (pais.equals("Sin filtro")) {
-                        //Mostrar los terremotos de un año
-                        rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosAnio(anio)));
-                    } else {
-                        //Mostrar los terremotos de un año y un país
-                        rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosAnioPais(anio, pais)));
-                    }
-                }
-            } else {
-                //Comprobar si el año es "Sin filtro"
-                if (anio.equals("Sin filtro")) {
-                    //Comprobar si el país es "Sin filtro"
-                    if (pais.equals("Sin filtro")) {
-                        //Mostrar los terremotos de un mes
-                        rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosMes(mes)));
-                    }
-                    else {
-                        //Mostrar los terremotos de un mes y un país
-                        rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosMesPais(mes, pais)));
-                    }
-                }
-                else {
-                    //Comprobar si el país es "Sin filtro"
-                    if (pais.equals("Sin filtro")) {
-                        //Mostrar los terremotos de un mes y un año
-                        rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosMesAnio(mes, anio)));
+            if (mes.equals("") || anio.equals("") || pais.equals("")) {
+                Toast.makeText(this, "No se ha seleccionado ningún filtro", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                TerremotosDB db = TerremotosDB.getDatabase(this);
+                //Comprobar si el mes es "Sin filtro"
+                if (mes.equals("Sin filtro")) {
+                    //Comprobar si el año es "Sin filtro"
+                    if (anio.equals("Sin filtro")) {
+                        //Comprobar si el país es "Sin filtro"
+                        if (pais.equals("Sin filtro")) {
+                            //Mostrar todos los terremotos
+                            TerremotosAdapter adapter = new TerremotosAdapter(db.terremotosDao().getAllTerremotos());
+                            if (adapter.getItemCount() == 0)
+                                Toast.makeText(this, "No se han encontrado terremotos con esos filtros", Toast.LENGTH_SHORT).show();
+                            rcVRes.setAdapter(adapter);
+                        }
+                        else {
+                            //Mostrar los terremotos de un país
+                            TerremotosAdapter adapter = new TerremotosAdapter(db.terremotosDao().selectTerremotosPais(pais));
+                            if (adapter.getItemCount() == 0)
+                                Toast.makeText(this, "No se han encontrado terremotos con esos filtros", Toast.LENGTH_SHORT).show();
+                            rcVRes.setAdapter(adapter);
+                        }
                     }
                     else {
-                        //Mostrar los terremotos de un mes, un año y un país
-                        rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosMesAnioPais(mes, anio, pais)));
+                        //Comprobar si el país es "Sin filtro"
+                        if (pais.equals("Sin filtro")) {
+                            //Mostrar los terremotos de un año
+                            TerremotosAdapter adapter = new TerremotosAdapter(db.terremotosDao().selectTerremotosAnio(anio));
+                            if (adapter.getItemCount() == 0)
+                                Toast.makeText(this, "No se han encontrado terremotos con esos filtros", Toast.LENGTH_SHORT).show();
+                            rcVRes.setAdapter(new TerremotosAdapter(db.terremotosDao().selectTerremotosAnio(anio)));
+                        }
+                        else {
+                            //Mostrar los terremotos de un año y un país
+                            TerremotosAdapter adapter = new TerremotosAdapter(db.terremotosDao().selectTerremotosAnioPais(anio, pais));
+                            if (adapter.getItemCount() == 0)
+                                Toast.makeText(this, "No se han encontrado terremotos con esos filtros", Toast.LENGTH_SHORT).show();
+                            rcVRes.setAdapter(adapter);
+                        }
+                    }
+                }
+                else {
+                    //Comprobar si el año es "Sin filtro"
+                    if (anio.equals("Sin filtro")) {
+                        //Comprobar si el país es "Sin filtro"
+                        if (pais.equals("Sin filtro")) {
+                            //Mostrar los terremotos de un mes
+                            TerremotosAdapter adapter = new TerremotosAdapter(db.terremotosDao().selectTerremotosMes(mes));
+                            if (adapter.getItemCount() == 0)
+                                Toast.makeText(this, "No se han encontrado terremotos con esos filtros", Toast.LENGTH_SHORT).show();
+                            rcVRes.setAdapter(adapter);
+                        }
+                        else {
+                            //Mostrar los terremotos de un mes y un país
+                            TerremotosAdapter adapter = new TerremotosAdapter(db.terremotosDao().selectTerremotosMesPais(mes, pais));
+                            if (adapter.getItemCount() == 0)
+                                Toast.makeText(this, "No se han encontrado terremotos con esos filtros", Toast.LENGTH_SHORT).show();
+                            rcVRes.setAdapter(adapter);
+                        }
+                    }
+                    else {
+                        //Comprobar si el país es "Sin filtro"
+                        if (pais.equals("Sin filtro")) {
+                            //Mostrar los terremotos de un mes y un año
+                            TerremotosAdapter adapter = new TerremotosAdapter(db.terremotosDao().selectTerremotosMesAnio(mes, anio));
+                            if (adapter.getItemCount() == 0)
+                                Toast.makeText(this, "No se han encontrado terremotos con esos filtros", Toast.LENGTH_SHORT).show();
+                            rcVRes.setAdapter(adapter);
+                        }
+                        else {
+                            //Mostrar los terremotos de un mes, un año y un país
+                            TerremotosAdapter adapter = new TerremotosAdapter(db.terremotosDao().selectTerremotosMesAnioPais(mes, anio, pais));
+                            if (adapter.getItemCount() == 0)
+                                Toast.makeText(this, "No se han encontrado terremotos con esos filtros", Toast.LENGTH_SHORT).show();
+                            rcVRes.setAdapter(adapter);
+                        }
                     }
                 }
             }

@@ -2,10 +2,17 @@
     <string name="app_name">Consulta Terremotos</string>
     <string name="consultar">Consultar</string>
     <string name="filtrar">Filtrar</string>
-    <string name="mes_anio_pais">Mes:\nAño:\nPaís: </string>
+    <string name="mes_anio_pais">Mes: \nAño: \nPaís: </string>
     <string name="mes">Mes</string>
     <string name="anio">Año</string>
     <string name="pais">País</string>
     <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
+    <string name="fecha_y_hora">Fecha y Hora:</string>
+    <string name="magnitud">Magnitud:</string>
+    <string name="nombre_del_dispositivo">Nombre del dispositivo:</string>
+    <string name="coordenadas_del_epicentro">Coordenadas del epicentro:</string>
+    <string name="lugar">Lugar:</string>
+    <string name="cantidad_de_muertos">Cantidad de Muertos:</string>
+    <string name="terremoto">Terremoto:</string>
 </resources>

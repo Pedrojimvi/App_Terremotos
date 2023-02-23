@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txtTer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/terremoto"
+        android:textColor="@color/brown_700"
+        android:textSize="20sp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/txtFijFec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/fecha_y_hora"
+        android:textColor="@color/brown_700"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtFec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textColor="@color/brown_500"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/txtFijMag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/magnitud"
+        android:textColor="@color/brown_700"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtMag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textColor="@color/brown_500"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/txtFijNom_dis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/nombre_del_dispositivo"
+        android:textColor="@color/brown_700"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtNom_dis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textColor="@color/brown_500"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/txtFijCoor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/coordenadas_del_epicentro"
+        android:textColor="@color/brown_700"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtCoor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textColor="@color/brown_500"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/txtFijLug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/lugar"
+        android:textColor="@color/brown_700"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtLug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textColor="@color/brown_500"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/txtFijCant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/cantidad_de_muertos"
+        android:textColor="@color/brown_700"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtCant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textColor="@color/brown_500"
+        android:textSize="14sp" />
+
+</LinearLayout>
