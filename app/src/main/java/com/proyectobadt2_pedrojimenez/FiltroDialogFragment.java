@@ -30,6 +30,7 @@ public class FiltroDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View v = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_filtro, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        //Creación del título del diálogo con el color correspondiente y negrita
         SpannableString titulo = new SpannableString("Filtrar por:");
         titulo.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, titulo.length(), 0);
         titulo.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.brown_500)), 0, titulo.length(), 0);
