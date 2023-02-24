@@ -25,6 +25,9 @@ public class FiltroDialogFragment extends DialogFragment {
     Spinner spnMes;
     EditText edtAnio;
     Spinner spnPais;
+    static int opMes = 0;
+    static int opAnio = 0;
+    static int opPais = 0;
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -53,6 +56,15 @@ public class FiltroDialogFragment extends DialogFragment {
 
         spnPais.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, paisesFinal));
 
+        //Modificación de los Spinners y EditText para que muestren los valores que se han filtrado anteriormente
+        spnMes.setSelection(opMes);
+        if (opAnio > 0) edtAnio.setText(String.valueOf(opAnio));
+        spnPais.setSelection(opPais);
+
+        System.out.println(opMes);
+        System.out.println(opAnio);
+        System.out.println(opPais);
+
         builder.setPositiveButton(R.string.aceptar, (dialog, id) -> {
             String mes;
             String anio;
@@ -72,6 +84,11 @@ public class FiltroDialogFragment extends DialogFragment {
                 pais = spnPais.getSelectedItem().toString();
 
                 listener.onAceptarDatosListener(mes, anio, pais);
+
+                //Guardamos los valores de los filtros para que se muestren en el diálogo cuando se vuelva a abrir
+                opMes = spnMes.getSelectedItemPosition();
+                opAnio = Integer.parseInt(edtAnio.getText().toString());
+                opPais = spnPais.getSelectedItemPosition();
             }
         });
 

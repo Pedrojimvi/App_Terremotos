@@ -30,6 +30,7 @@ public class TerremotosAdapter extends RecyclerView.Adapter<TerremotosAdapter.Te
     public void onBindViewHolder(@NonNull TerremotosAdapter.TerremotosViewHolder holder, int position) {
         //Añadir los datos de la lista al ViewHolder
         Terremoto terremoto = listaTerremotos.get(position);
+        holder.txtTer.setText("Terremoto " + (position + 1) + ":");
         holder.txtFec.setText(terremoto.getFec_hor());
         holder.txtMag.setText(String.valueOf(terremoto.getMag()));
         holder.txtNom_dis.setText(terremoto.getNom_disp());
@@ -44,11 +45,12 @@ public class TerremotosAdapter extends RecyclerView.Adapter<TerremotosAdapter.Te
     }
 
     public static class TerremotosViewHolder extends RecyclerView.ViewHolder {
-        public TextView txtFec, txtMag, txtNom_dis, txtCoor, txtLug, txtCant;
+        public TextView txtTer, txtFec, txtMag, txtNom_dis, txtCoor, txtLug, txtCant;
         //Añadimos los elementos del layout terremoto_item al ViewHolder
 
         public TerremotosViewHolder(@NonNull View v) {
             super(v);
+            txtTer = v.findViewById(R.id.txtTer);
             txtFec = v.findViewById(R.id.txtFec);
             txtMag = v.findViewById(R.id.txtMag);
             txtNom_dis = v.findViewById(R.id.txtNom_dis);
