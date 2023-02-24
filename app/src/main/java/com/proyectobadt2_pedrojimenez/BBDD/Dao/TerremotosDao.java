@@ -23,7 +23,7 @@ public interface TerremotosDao {
             "AND pais LIKE '%' ||:pais|| '%'")
     List<Terremoto> selectTerremotosMesPais(String mes, String pais);
     @Query("SELECT * FROM TERREMOTOS t, PAISES_AFECTADOS p WHERE t.fecha_hora = p.fecha_hora AND t.fecha_hora LIKE '%' ||:mes|| '%' " +
-            "AND t.fecha_hora = p.fecha_hora LIKE '%' ||:anio|| '%' AND pais LIKE '%' ||:pais|| '%'")
+            "AND t.fecha_hora LIKE '%' ||:anio|| '%' AND pais LIKE '%' ||:pais|| '%'")
     List<Terremoto> selectTerremotosMesAnioPais(String mes, String anio, String pais);
     @Query("SELECT * FROM TERREMOTOS WHERE fecha_hora LIKE '%' ||:anio|| '%'")
     List<Terremoto> selectTerremotosAnio(String anio);
