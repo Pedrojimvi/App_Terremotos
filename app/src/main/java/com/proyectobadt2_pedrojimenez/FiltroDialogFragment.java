@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
@@ -18,6 +17,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.proyectobadt2_pedrojimenez.BBDD.TerremotosDB;
+
+import java.util.Calendar;
 
 public class FiltroDialogFragment extends DialogFragment {
     TerremotosDB db = TerremotosDB.getDatabase(getContext());
@@ -61,10 +62,6 @@ public class FiltroDialogFragment extends DialogFragment {
         if (opAnio > 0) edtAnio.setText(String.valueOf(opAnio));
         spnPais.setSelection(opPais);
 
-        System.out.println(opMes);
-        System.out.println(opAnio);
-        System.out.println(opPais);
-
         builder.setPositiveButton(R.string.aceptar, (dialog, id) -> {
             String mes;
             String anio;
@@ -74,7 +71,10 @@ public class FiltroDialogFragment extends DialogFragment {
                 edtAnio.setText("-1");
             }
 
-            if (Integer.parseInt(edtAnio.getText().toString()) > 2023 || (edtAnio.length() >= 1 && edtAnio.length() < 4 && !edtAnio.getText().toString().equals("-1"))) Toast.makeText(getContext(), "El año introducido no es válido", Toast.LENGTH_SHORT).show();
+            //Comprobamos que la versión de Android sea la necesaria para usar LocalDate (SITUACIÓN MUY PUNTUAL Y QUE NO SE DA EN LA MAYORÍA DE LOS CASOS)
+            int anioInt = Calendar.getInstance().get(Calendar.YEAR);
+
+            if (Integer.parseInt(edtAnio.getText().toString()) > anioInt || (edtAnio.length() >= 1 && edtAnio.length() < 4 && !edtAnio.getText().toString().equals("-1"))) Toast.makeText(getContext(), "Año introducido no válido porque no tiene 4 cifras o supera el actual", Toast.LENGTH_SHORT).show();
             else {
                 mes = spnMes.getSelectedItem().toString();
                 anio = edtAnio.getText().toString();
